@@ -1,0 +1,26 @@
+name: build-checksum-test
+on:
+  workflow_dispatch:
+
+jobs:
+  build_container:
+    name: main
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+
+    steps:
+      # Checkout push-to-registry action GitHub repository
+      - name: Checkout Push to Registry action
+        uses: actions/checkout@v4
+
+      # Build image using Buildah action
+      - name: Build Image
+        id: build_image
+        uses: redhat-actions/buildah-build@v2
+        with:
+          containerfiles: |
+            ./Containerfile
+          image: myimage
+          tags: |
+            ${{ github.sha }}
